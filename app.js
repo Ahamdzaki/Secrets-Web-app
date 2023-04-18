@@ -2,6 +2,8 @@ const express = require("express");
 const bodyparser = require("body-parser");
 const mongoose = require("mongoose");
 const ejs = require("ejs");
+const encrypt = require("mongoose-encryption");
+
 
 
 
@@ -24,8 +26,9 @@ const userSchema = new mongoose.Schema({
 });
 
 
-
-
+//*************Encryption*********
+const secret = "thisismylittlesecret";
+userSchema.plugin(encrypt,{secret:secret,encryptedFields:["password","address"]});
 
 
 
@@ -60,7 +63,7 @@ app.post("/register",function(req,res){
         password: req.body.password,
         address: req.body.address
     });
-    
+
    newUser.save().then(function(){
         res.render("secrets");
    }).catch(function(err){
